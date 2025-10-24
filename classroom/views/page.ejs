@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello Page</title>
+</head>
+<body>
+  <% if (successMsg && successMsg.length > 0) { %>
+    <% successMsg.forEach(msg => { %>
+      <p style="color: green;"><%= msg %></p>
+    <% }) %>
+  <% } %>
+
+  <% if (errorMsg && errorMsg.length > 0) { %>
+    <% errorMsg.forEach(msg => { %>
+      <p style="color: red;"><%= msg %></p>
+    <% }) %>
+  <% } %>
+
+  <h1>Hello, <%= name %></h1>
+</body>
+</html>
