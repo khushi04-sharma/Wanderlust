@@ -90,23 +90,42 @@
         </ul>
       </div>
       <div class="col-8 offset-3 mb-3">
-            <h3>Where you'll be</h3>
-            <div id="map"></div>
-      </div>
-    </div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <h3>Where you'll be</h3>
+  <div id="map" style="height: 400px;"></div>
+</div>
 
-    <script>
-      var map = L.map("map").setView([40, -74.5], 9);
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Use the listing's location from EJS
+  const locationName = "<%= listing.location %>";
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-      }).addTo(map);
+  // Initialize the map with a default view
+  var map = L.map("map").setView([20, 0], 2); // default view if geocoding fails
 
-      L.marker([40, -74.5])
-        .addTo(map)
-        .bindPopup("<b>Hello!</b><br>This is an OpenStreetMap example.")
-        .openPopup();
-      </script>
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Forward geocode the location using Nominatim
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}`)
+    .then(response => response.json())
+    .then(data => {
+      if(data && data.length > 0) {
+        const lat = data[0].lat;
+        const lon = data[0].lon;
+
+        map.setView([lat, lon], 13); // zoom in on the location
+
+        L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(`<b>${locationName}</b>`)
+          .openPopup();
+      } else {
+        console.error("Location not found!");
+      }
+    })
+    .catch(err => console.error(err));
+</script>
+
   </body>

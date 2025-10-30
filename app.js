@@ -53,6 +53,24 @@ store.on("error",()=>{
   console.log("ERROR in MONGO SESSION STORE",err);
 });
 
+
+// ---------------- CSP MIDDLEWARE -----------------
+//  Safer and functional CSP
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     "Content-Security-Policy",
+//     "default-src 'self'; " +
+//     "connect-src 'self' https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com; " +
+//     "font-src 'self' https://fonts.gstatic.com; " +
+//     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; " +
+//     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; " +
+//     "img-src 'self' data: blob: https://*.unsplash.com;"
+//   );
+//   next();
+// });
+// --------------------------------------------
+
+
 const sessionOptions={
     store,
     secret:"mysupersecretstring",
@@ -64,6 +82,8 @@ const sessionOptions={
       httpOnly:true,
     },
 };
+//console.log("Redirect URL:", req.session.redirectUrl);
+
 // app.get("/",(req,res)=>{
 //     res.send("hi,i am root");
 // });
@@ -98,15 +118,35 @@ app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
 
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
+
 app.all("/", (req, res, next) => {
   next(new ExpressError(404, "page not found"));
 });
 
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs",{message});
+  //res.status(statusCode).render("error.ejs",{message});
   //res.status(statusCode).send(message);
+  res.status(statusCode).render("error.ejs", {
+  message,
+  currUser: req.user // ensures navbar.ejs can access it
+  });
+
 });
+
+// app.use((err, req, res, next) => {
+//   let { statusCode = 500, message = "Something went wrong" } = err;
+//   res.status(statusCode).render("error.ejs", {
+//     message,
+//     currUser: req.user, // important!
+//     success: req.flash("success"),
+//     error: req.flash("error")
+//   });
+// });
+
 
 app.listen(8080, () => {
   console.log("server is running on port 8080");

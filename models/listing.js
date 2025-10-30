@@ -30,6 +30,17 @@ const listingSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  geometry: {
+  type: {
+    type: String,           // must be "Point"
+    enum: ["Point"],
+    required:true,
+  },
+  coordinates: {
+    type: [Number],
+    required:true,
+  }
+},
   category:{
     type:String,
     enum:["mountains","arctic","farms","deserts"],
