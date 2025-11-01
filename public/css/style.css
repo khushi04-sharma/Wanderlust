@@ -44,6 +44,39 @@
     font-size:1.2rem;
     margin-right:1rem;
 }
+.f-info-socials {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+    
+}
+
+.f-info-socials a {
+    font-size: 1.8rem;
+    transition: transform 0.3s ease;
+}
+
+.f-info-socials a:hover {
+    transform: scale(1.2);
+}
+
+/* Brand colors */
+.facebook {
+    color: #1877F2; /* Facebook Blue */
+}
+
+.instagram {
+    color: #E4405F; /* Instagram Pinkish */
+}
+
+.twitter {
+    color: #1DA1F2; /* Twitter Blue */
+}
+
+.youtube {
+    color: #FF0000; /* YouTube Red */
+}
 
 .listing-card{
     border:none !important;
